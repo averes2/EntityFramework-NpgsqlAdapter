@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "Microsoft.EntityFrameworkCore": "1.0.0",
+    "Microsoft.NETCore.App": {
+      "version": "1.0.0",
+      "type": "platform"
+    },
+    "Npgsql": "3.1.7",
+    "Npgsql.EntityFrameworkCore.PostgreSQL": "1.0.1",
+    "System.Interactive.Async": "3.0.0",
+    "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.0.0",
+    "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.0.1",
+    "Microsoft.EntityFrameworkCore.Design": "1.0.0-preview2-final"
+  },
+  "frameworks": {
+    "netcoreapp1.0": {}
+  },
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
+  "tools": {
+    "Microsoft.EntityFrameworkCore.Tools": {
+      "version": "1.0.0-preview2-final"
+    }
+  }
+}

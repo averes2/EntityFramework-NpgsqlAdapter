@@ -20,6 +20,11 @@ namespace PsqlAdapter.Data
         public readonly T Value;
         public DataState State;
         // accept dictionary<string, string> we'll convert back and forth to mantain data
+        /// <summary>
+        /// Create T and populate properties with Dictionary key,value pairs
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="initial"></param>
         public PsqlData(Dictionary<string, string> row, DataState initial = DataState.Found)
         {
             try
@@ -42,6 +47,11 @@ namespace PsqlAdapter.Data
         }
 
         // accept dictionary<string, object> but we lose data when converting to object
+        /// <summary>
+        /// Create T and populate properties with Dictionary key,value pairs
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="initial"></param>
         public PsqlData(Dictionary<string, object> row, DataState initial = DataState.Found)
         {
             try
@@ -63,6 +73,11 @@ namespace PsqlAdapter.Data
             catch { }
         }
 
+        /// <summary>
+        /// Initialize PsqlData with T
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="initial"></param>
         public PsqlData(T value, DataState initial = DataState.Found)
         {
             State = initial;

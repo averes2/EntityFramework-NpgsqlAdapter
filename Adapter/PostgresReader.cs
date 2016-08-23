@@ -37,6 +37,11 @@ namespace PsqlAdapter.Adapter
             }
         }
 
+        /// <summary>
+        /// Construct PostgresReader, if were returning a value place it into InsertionId
+        /// Return the result set of the SQL command to our PsqlSet<typeparamref name="T"/> Result
+        /// </summary>
+        /// <param name="reader"></param>
         public PostgresReader(NpgsqlDataReader reader)
         {
             InsertionId = 0;
@@ -80,6 +85,10 @@ namespace PsqlAdapter.Adapter
             .Where(w => w.Value.GetType().GetProperty(key).GetValue(w) == val)
             .Select(s => s.State = DataState.ToRemove);
 
+        /// <summary>
+        /// Not implemented
+        /// </summary>
+        /// <param name="Update"></param>
         public void Update(T Update)
         {
             if(typeof(T).GetInterfaces().Any(a => a.Name.Equals("IIndexable")))
@@ -101,7 +110,6 @@ namespace PsqlAdapter.Adapter
                     }
                 }
             }
-            // rethink this design, probably do interface development?
         }
         
     }

@@ -14,6 +14,9 @@ namespace PsqlAdapter
 {
     // This project can output the Class library as a NuGet Package.
     // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
+    /// <summary>
+    /// PostgresDb extends DbContext to be used in EF
+    /// </summary>
     public class PostgresDb : DbContext, IDisposable
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -38,6 +41,10 @@ namespace PsqlAdapter
         public PsqlSet<wsbuser> WSBUsers { get; set; }
         public PsqlSet<wsbticker> WSBTickers { get; set; }
 
+        /// <summary>
+        /// Save changes and find our models IDs
+        /// </summary>
+        /// <returns></returns>
         public async Task<int> SaveChangesAsync()
         {
             string tablename;
@@ -106,6 +113,13 @@ namespace PsqlAdapter
         { }
 
 
+        /// <summary>
+        /// Get PostgresReader<typeparamref name="T"/> allows us to
+        /// access insertion Id and Results from queries.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="commandtext"></param>
+        /// <param name="reader"></param>
         private void GetReader<T>(string commandtext, out PostgresReader<T> reader)
             where T: class, new()
         {
@@ -124,17 +138,37 @@ namespace PsqlAdapter
             }
         }
 
+        /// <summary>
+        /// Get T Value from TClass object
+        /// 
+        /// Hardcoded single implementation
+        /// </summary>
+        /// <param name="TClass"></param>
+        /// <returns></returns>
         private object ReflectDataValue(object TClass)
             => TClass.GetType().GetField("Value").GetValue(TClass);
 
+        /// <summary>
+        /// Set T Value property key to value
+        /// 
+        /// Hardcoded single implementation
+        /// </summary>
+        /// <param name="TClass"></param>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         private void ReflectSetDataValue(object TClass, string key, object value)
         {
             var temp = TClass.GetType().GetField("Value").GetValue(TClass);
             temp.GetType().GetProperty(key).SetValue(ReflectDataValue(TClass), value);
         }
-           
 
-        // Inserts an object to the table using reflection to fill the properties
+        
+        /// <summary>
+        /// Inserts an object to the table using reflection to fill the properties
+        /// </summary>
+        /// <param name="TClass"></param>
+        /// <param name="tablename"></param>
+        /// <returns></returns>
         private async Task<object> Insert(object TClass, string tablename)
         {
             PostgresReader<object> Result = null;
@@ -166,6 +200,12 @@ namespace PsqlAdapter
             return TClass;
         }
 
+        /// <summary>
+        /// Delete from the table using the defined Key of TClass to find the object
+        /// </summary>
+        /// <param name="TClass"></param>
+        /// <param name="tablename"></param>
+        /// <returns></returns>
         private async Task Remove(object TClass, string tablename)
         {
             PostgresReader<object> Result = null;
@@ -179,6 +219,12 @@ namespace PsqlAdapter
             });
         }
 
+        /// <summary>
+        /// Send PSQL command
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="commandtext"></param>
+        /// <returns></returns>
         public async Task<PostgresReader<T>> Dispatch<T>(string commandtext)
             where T: class, new()
         {
@@ -190,6 +236,12 @@ namespace PsqlAdapter
             return Result;
         }
 
+        /// <summary>
+        /// Get set result of a given model
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tablename"></param>
+        /// <returns></returns>
         public PsqlSet<T> Set<T>(string tablename = "")
             where T: class, new()
         {
@@ -198,6 +250,12 @@ namespace PsqlAdapter
             return read.Set;
         }
 
+        /// <summary>
+        /// Get PostgresReader<typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tablename"></param>
+        /// <returns></returns>
         public PostgresReader<T> Reader<T>(string tablename = "")
             where T : class, new()
         {
@@ -207,6 +265,9 @@ namespace PsqlAdapter
         }
         
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
         }
